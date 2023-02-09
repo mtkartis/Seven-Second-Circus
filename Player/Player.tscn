@@ -1,0 +1,160 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Images/Duck-sheet.png" type="Texture" id=1]
+[ext_resource path="res://Player/Player.gd" type="Script" id=2]
+[ext_resource path="res://TrainingRoom/Training/Rope.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Images/Rope.png" type="Texture" id=4]
+[ext_resource path="res://Images/Plate.png" type="Texture" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 32.588, 32.0178 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 18.4409
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 10, 30 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 40, 40 )
+
+[sub_resource type="Animation" id=5]
+resource_name = "Idle"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Image:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "Jump"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Image:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 6 ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "PanicIdle"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Image:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 3 ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "PanicWalk"
+length = 0.8
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Image:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 4, 3, 5, 3 ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "Walk"
+length = 0.8
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Image:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 0, 2, 0 ]
+}
+
+[node name="Player" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 13
+script = ExtResource( 2 )
+
+[node name="Image" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 7
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="ShapeRound" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 16 )
+shape = SubResource( 2 )
+
+[node name="Plate" type="RigidBody2D" parent="."]
+position = Vector2( 0, -48 )
+collision_layer = 0
+
+[node name="Joint" type="PinJoint2D" parent="Plate"]
+position = Vector2( 0, 24 )
+node_a = NodePath("..")
+node_b = NodePath("../..")
+softness = 3.0
+
+[node name="Shape" type="CollisionShape2D" parent="Plate"]
+shape = SubResource( 3 )
+
+[node name="Position" type="Position2D" parent="Plate"]
+position = Vector2( 0, -24 )
+
+[node name="Sprite" type="Sprite" parent="Plate"]
+position = Vector2( 0, 8 )
+scale = Vector2( 1, 0.9 )
+texture = ExtResource( 5 )
+
+[node name="Reach" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 12
+
+[node name="Shape" type="CollisionShape2D" parent="Reach"]
+shape = SubResource( 4 )
+
+[node name="Rope" parent="." instance=ExtResource( 3 )]
+
+[node name="Sprite" type="Sprite" parent="Rope"]
+rotation = 1.5708
+texture = ExtResource( 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Idle = SubResource( 5 )
+anims/Jump = SubResource( 6 )
+anims/PanicIdle = SubResource( 7 )
+anims/PanicWalk = SubResource( 8 )
+anims/Walk = SubResource( 9 )
+
+[editable path="Rope"]

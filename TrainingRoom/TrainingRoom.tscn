@@ -1,0 +1,164 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Stage/Solid.tscn" type="PackedScene" id=1]
+[ext_resource path="res://TrainingRoom/Interactible.tscn" type="PackedScene" id=2]
+[ext_resource path="res://TrainingRoom/Training/Treadmill.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://TrainingRoom/TrainingRoom.gd" type="Script" id=5]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=6]
+[ext_resource path="res://HUD/TutorialInterface.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Images/TrainingRoomBackground.png" type="Texture" id=8]
+[ext_resource path="res://Images/Sprite-0002.png" type="Texture" id=9]
+[ext_resource path="res://Images/RopePodium.png" type="Texture" id=10]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 32, 32 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 32, 32 )
+
+[node name="TrainingRoom" type="Node"]
+script = ExtResource( 5 )
+
+[node name="Solid" parent="." instance=ExtResource( 1 )]
+
+[node name="Shape" parent="Solid" index="0"]
+position = Vector2( 25.2562, 48 )
+scale = Vector2( 0.947632, 0.8125 )
+polygon = PoolVector2Array( -26.652, 256, -26.652, 216.615, 512, 216, 512, 256 )
+
+[node name="Door" parent="." instance=ExtResource( 2 )]
+position = Vector2( 64, 192 )
+
+[node name="Image" parent="Door" index="0"]
+position = Vector2( 0, -8.00001 )
+scale = Vector2( 1, 1.25 )
+animation = "Door"
+
+[node name="Shape" parent="Door" index="1"]
+shape = SubResource( 1 )
+
+[node name="JumpRope" parent="." instance=ExtResource( 2 )]
+position = Vector2( 256, 176 )
+type = 2
+
+[node name="Image" parent="JumpRope" index="0"]
+animation = "Rope"
+
+[node name="Shape" parent="JumpRope" index="1"]
+shape = SubResource( 2 )
+
+[node name="Solid" parent="JumpRope" instance=ExtResource( 1 )]
+position = Vector2( -256, -176 )
+
+[node name="Shape" parent="JumpRope/Solid" index="0"]
+polygon = PoolVector2Array( 216, 224, 216, 208, 296, 208, 296, 224 )
+
+[node name="Sprite" type="Sprite" parent="JumpRope/Solid"]
+position = Vector2( 256, 176 )
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 10 )
+
+[node name="Treadmill" parent="." instance=ExtResource( 3 )]
+position = Vector2( 448, 200 )
+
+[node name="Sprite" parent="Treadmill" index="2"]
+frame = 2
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 144, 184 )
+
+[node name="TrainingCam" type="Camera2D" parent="."]
+position = Vector2( 256, 128 )
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="HUD" instance=ExtResource( 6 )]
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Background" type="TextureRect" parent="Background"]
+margin_right = 512.0
+margin_bottom = 224.0
+texture = ExtResource( 8 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Floor" type="TextureRect" parent="Background"]
+margin_top = 224.0
+margin_right = 512.0
+margin_bottom = 264.0
+texture = ExtResource( 9 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InitTutorial" type="Control" parent="Background"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TutorialInterface" parent="Background/InitTutorial" instance=ExtResource( 7 )]
+margin_left = 168.0
+margin_top = 24.0
+margin_right = 344.0
+margin_bottom = 128.0
+index = 1
+
+[node name="Tutorial2" type="Control" parent="Background"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TutorialInterface2" parent="Background/Tutorial2" instance=ExtResource( 7 )]
+margin_left = 168.0
+margin_top = 88.0
+margin_right = 344.0
+margin_bottom = 160.0
+index = 2
+
+[node name="TutorialInterface3" parent="Background/Tutorial2" instance=ExtResource( 7 )]
+margin_left = 80.0
+margin_top = 8.0
+margin_right = 232.0
+margin_bottom = 96.0
+
+[node name="TutorialInterface4" parent="Background/Tutorial2" instance=ExtResource( 7 )]
+margin_left = 344.0
+margin_top = 88.0
+margin_right = 504.0
+margin_bottom = 160.0
+index = 3
+
+[node name="Win" type="Control" parent="Background"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TutorialInterface5" parent="Background/Win" instance=ExtResource( 7 )]
+margin_left = 104.0
+margin_top = 32.0
+margin_right = 448.0
+margin_bottom = 96.0
+index = 8
+[connection signal="open_door" from="Player" to="." method="door_open"]
+
+[editable path="Solid"]
+
+[editable path="Door"]
+
+[editable path="JumpRope"]
+
+[editable path="JumpRope/Solid"]
+
+[editable path="Treadmill"]

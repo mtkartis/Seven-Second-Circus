@@ -1,0 +1,177 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://Stage/Stage.gd" type="Script" id=1]
+[ext_resource path="res://Stage/Solid.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Stage/StageClock.tscn" type="PackedScene" id=4]
+[ext_resource path="res://TrainingRoom/Interactible.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Images/ExitArrow.png" type="Texture" id=6]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
+[ext_resource path="res://HUD/TutorialInterface.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Stage/Curtains.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Images/StageBackground.png" type="Texture" id=10]
+[ext_resource path="res://Images/Sprite-0002.png" type="Texture" id=11]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 512, 0, 0, 0, 0, 0, 0, 0 )
+}
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 32, 32 )
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+void vertex(){
+	VERTEX.x += 5.0*sin(TIME*12.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+
+[node name="Stage" type="Node"]
+script = ExtResource( 1 )
+
+[node name="Solid" parent="." instance=ExtResource( 2 )]
+position = Vector2( 128, 0 )
+
+[node name="Shape" parent="Solid" index="0"]
+position = Vector2( -128, -64 )
+polygon = PoolVector2Array( 0, 320, 0, 288, 512, 288, 512, 320 )
+
+[node name="StageCam" type="Camera2D" parent="."]
+position = Vector2( 256, 128 )
+current = true
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 256, 184 )
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="HUD" instance=ExtResource( 7 )]
+
+[node name="Curtains" parent="HUD" instance=ExtResource( 9 )]
+position = Vector2( 256, 128 )
+
+[node name="Left" type="Position2D" parent="."]
+position = Vector2( -24, 192 )
+
+[node name="Right" type="Position2D" parent="."]
+position = Vector2( 528, 192 )
+
+[node name="SandbagSpawn" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="SandbagSpawnPoint" type="PathFollow2D" parent="SandbagSpawn"]
+position = Vector2( 512, 0 )
+rotation = 3.14159
+
+[node name="SpawnTimer" type="Timer" parent="."]
+
+[node name="Door" parent="." instance=ExtResource( 5 )]
+position = Vector2( 480, 192 )
+z_index = -1
+
+[node name="Image" parent="Door" index="0"]
+position = Vector2( 0, -8 )
+scale = Vector2( 1, 1.25 )
+animation = "Door"
+
+[node name="Shape" parent="Door" index="1"]
+shape = SubResource( 2 )
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Background" type="TextureRect" parent="Background"]
+margin_right = 512.0
+margin_bottom = 256.0
+texture = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Floor" type="TextureRect" parent="Background"]
+margin_top = 224.0
+margin_right = 512.0
+margin_bottom = 288.0
+texture = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tutorial" type="Control" parent="Background"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TutorialInterface" parent="Background/Tutorial" instance=ExtResource( 8 )]
+margin_left = 128.0
+margin_top = 8.0
+margin_right = 376.0
+margin_bottom = 32.0
+index = 5
+
+[node name="TutorialInterface2" parent="Background/Tutorial" instance=ExtResource( 8 )]
+margin_left = 8.0
+margin_top = 64.0
+margin_right = 80.0
+margin_bottom = 128.0
+index = 4
+
+[node name="TutorialInterface3" parent="Background/Tutorial" instance=ExtResource( 8 )]
+margin_left = 432.0
+margin_top = 64.0
+margin_right = 504.0
+margin_bottom = 128.0
+index = 4
+
+[node name="TutorialInterface4" parent="Background/Tutorial" instance=ExtResource( 8 )]
+margin_left = 128.0
+margin_top = 56.0
+margin_right = 384.0
+margin_bottom = 144.0
+index = 6
+
+[node name="ExitArrow" type="TextureRect" parent="Background"]
+visible = false
+material = SubResource( 4 )
+margin_left = 384.0
+margin_top = 160.0
+margin_right = 448.0
+margin_bottom = 224.0
+texture = ExtResource( 6 )
+flip_v = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TutorialInterface5" parent="Background/ExitArrow" instance=ExtResource( 8 )]
+margin_left = -104.0
+margin_top = -40.0
+margin_right = 48.0
+margin_bottom = 0.0
+index = 7
+
+[node name="StageClock" parent="Background" instance=ExtResource( 4 )]
+margin_left = 224.0
+margin_top = 32.0
+margin_right = 288.0
+margin_bottom = 56.0
+[connection signal="open_door" from="Player" to="." method="door_interact"]
+[connection signal="plate_fail" from="Player" to="Background/StageClock" method="plate_fail"]
+[connection signal="plate_fail" from="Player" to="." method="plate_fail"]
+[connection signal="plate_move" from="Player" to="Background/StageClock" method="go_clock"]
+[connection signal="plate_still" from="Player" to="Background/StageClock" method="pause_clock"]
+[connection signal="open" from="HUD/Curtains" to="Background/StageClock" method="curtains_open"]
+[connection signal="open" from="HUD/Curtains" to="Player" method="curtains_opened"]
+[connection signal="timeout" from="SpawnTimer" to="." method="spawn_sandbag"]
+[connection signal="timeout" from="SpawnTimer" to="." method="spawn_tomato"]
+[connection signal="hazard_start" from="Background/StageClock" to="." method="init_hazards"]
+
+[editable path="Solid"]
+
+[editable path="Door"]

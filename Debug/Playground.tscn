@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Stage/Solid.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Stage/Curtains.tscn" type="PackedScene" id=3]
+[ext_resource path="res://TrainingRoom/Interactible.tscn" type="PackedScene" id=4]
+[ext_resource path="res://TrainingRoom/Training/Treadmill.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Stage/StageClock.tscn" type="PackedScene" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 32, 32 )
+
+[node name="DebugPlayground" type="Node"]
+
+[node name="Solid" parent="." instance=ExtResource( 1 )]
+
+[node name="Shape" parent="Solid" index="0"]
+position = Vector2( -384, -88 )
+polygon = PoolVector2Array( 0, 320, 1024, 320, 1024, 384, 0, 384 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 56, 192 )
+
+[node name="Curtains" parent="." instance=ExtResource( 3 )]
+visible = false
+position = Vector2( 64, 72 )
+
+[node name="Interactible" parent="." instance=ExtResource( 4 )]
+position = Vector2( 224, 200 )
+type = 2
+
+[node name="Shape" parent="Interactible" index="1"]
+shape = SubResource( 1 )
+
+[node name="Treadmill" parent="." instance=ExtResource( 5 )]
+position = Vector2( 208, 0 )
+
+[node name="PanelContainer" parent="." instance=ExtResource( 6 )]
+margin_left = 128.0
+margin_top = 104.0
+margin_right = 168.0
+margin_bottom = 128.0
+[connection signal="plate_move" from="Player" to="PanelContainer" method="go_clock"]
+[connection signal="plate_still" from="Player" to="PanelContainer" method="pause_clock"]
+
+[editable path="Solid"]
+
+[editable path="Interactible"]

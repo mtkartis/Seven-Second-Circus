@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://TrainingRoom/Interactible.gd" type="Script" id=2]
+[ext_resource path="res://Images/HungRope.png" type="Texture" id=3]
+[ext_resource path="res://Images/Door.png" type="Texture" id=4]
+
+[sub_resource type="StreamTexture" id=2]
+flags = 4
+load_path = "res://.import/icon.png-487276ed1e3a0c39cad0279d744ee560.stex"
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ SubResource( 2 ) ],
+"loop": true,
+"name": "Debug",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "Rope",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "Door",
+"speed": 5.0
+} ]
+
+[node name="Interactible" type="Area2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource( 2 )
+
+[node name="Image" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "Debug"
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+[connection signal="body_entered" from="." to="." method="area_entered"]
+[connection signal="body_exited" from="." to="." method="area_exited"]

@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Stage/StageClock.gd" type="Script" id=1]
+[ext_resource path="res://Images/TutorialSigns.png" type="Texture" id=2]
+
+[node name="PanelContainer" type="MarginContainer"]
+margin_right = 64.0
+margin_bottom = 32.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="TextureRect" parent="."]
+modulate = Color( 0.360784, 0.690196, 0.172549, 1 )
+margin_right = 64.0
+margin_bottom = 32.0
+size_flags_horizontal = 5
+size_flags_vertical = 5
+texture = ExtResource( 2 )
+expand = true
+
+[node name="Timer7" type="Timer" parent="."]
+wait_time = 7.0
+one_shot = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_right = 64.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Countdown" type="Timer" parent="."]
+[connection signal="timeout" from="Timer7" to="." method="win"]
+[connection signal="timeout" from="Countdown" to="." method="countdown_tick"]
